@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
         return;
       }
       res.status(OK).send({ data: card });
@@ -44,19 +44,19 @@ module.exports.deleteCard = (req, res) => {
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
         return;
       }
       res.status(OK).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Невалидный id ' });
+        res.status(BAD_REQUEST).send({ message: 'Невалидный id' });
       } else {
         res.status(SERVER_ERROR).send({ message: `Произошла ошибка ${err.name} c текстом ${err.message}` });
       }
@@ -65,12 +65,12 @@ module.exports.likeCard = (req, res) => {
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
         return;
       }
       res.status(OK).send({ data: card });
