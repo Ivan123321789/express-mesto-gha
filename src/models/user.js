@@ -15,16 +15,16 @@ const userSchema = new mongoose.Schema({
     maxlength: [30, 'Максимальная длина поля "about" - 30'],
   },
 
-  avatar: { 
-    type: String, 
-    validate: { 
-      validator: (v) => isURL(v), 
-      message: 'Некорректный URL', 
+  avatar: {
+    type: String,
+    validate: {
+      validator: (v) => isURL(v),
+      message: 'Некорректный URL',
     },
     required: true,
-  },  
-  
-    
-});
+  },
+      
+},
+{ versionKey: false });
 
 module.exports = mongoose.model('user', userSchema);
