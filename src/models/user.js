@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Поле "name" должно быть заполнено'],
       minlength: [2, 'Минимальная длина поля "name" - 2'],
       maxlength: [30, 'Максимальная длина поля "name" - 30'],
-    },  
+    },
     about: {
       type: String,
       required: [true, 'Поле "about" должно быть заполнено'],
@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema(
         message: 'Некорректный URL',
       },
       required: true,
-    },    
+    },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 module.exports = mongoose.model('user', userSchema);
