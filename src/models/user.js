@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const isURL = require('validator/lib/isURL');
 const isEmail = require('validator/lib/isEmail');
-const { UNAUTHORIZED } = require('../utils/responseStatus');
+const UNAUTHORIZED = require('../utils/responseStatus');
 
 const userSchema = new mongoose.Schema(
   {
