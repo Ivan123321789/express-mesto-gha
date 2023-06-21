@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema(
         validator: (v) => isURL(v),
         message: 'Некорректный URL',
       },
-      required: true,
     },
     email: {
       type: String,
