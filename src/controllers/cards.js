@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const {
-  OK, CREATED, BAD_REQUEST, FORBIDDEN, NOT_FOUND, SERVER_ERROR,
+  OK, CREATED, BAD_REQUEST, FORBIDDEN, NOT_FOUND,
 } = require('../utils/responseStatus');
 
 module.exports.getCards = (req, res, next) => {
@@ -33,7 +33,6 @@ module.exports.deleteCard = (req, res, next) => {
         res.status(OK).send({ data: card });
       } else {
         res.status(FORBIDDEN).send({ message: 'Удаление чужой карточки невозможно' });
-        return;
       }
     })
     .catch(next);

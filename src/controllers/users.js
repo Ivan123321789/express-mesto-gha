@@ -2,17 +2,19 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
-  OK, CREATED, BAD_REQUEST, NOT_FOUND, CONFLICT, SERVER_ERROR,
+  OK, CREATED, BAD_REQUEST, NOT_FOUND, CONFLICT,
 } = require('../utils/responseStatus');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(OK).send(users))
-    .catch(next); 
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email } = req.body;
+  const { 
+    name, about, avatar, email 
+  } = req.body;
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       name,
@@ -26,7 +28,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
       } if (err.code === 11000) {
-        res.status(CONFLICT).send({ message: `Пользователь с таким email уже зарегистрирован` });
+        res.status(CONFLICT).send({ message: 'Пользователь с таким email уже зарегистрирован' });
       } else {
         next(err);
       }
@@ -57,7 +59,7 @@ module.exports.patchUser = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        resstatus(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       }
       res.status(OK).send({ user });
