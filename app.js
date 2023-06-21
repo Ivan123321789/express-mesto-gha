@@ -27,8 +27,8 @@ app.use((req, res, next) => {
 });
 app.post('/signin', authValidation, login);
 app.post('/signup', regValidation, createUser);
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use('/', auth, userRouter);
+app.use('/', auth, cardRouter);
 app.use('/', (req, res) => {
   res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
 });
