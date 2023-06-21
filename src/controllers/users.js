@@ -26,7 +26,7 @@ module.exports.createUser = (req, res, next) => {
     .then(() => {
       res.status(CREATED).send({
         data: {
-          name, about, avatar, email, 
+          name, about, avatar, email,
         },
       });
     })
