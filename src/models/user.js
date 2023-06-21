@@ -16,11 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       minlength: [2, 'Минимальная длина поля "about" - 2'],
       maxlength: [30, 'Максимальная длина поля "about" - 30'],
-      default: 'Первый космонавт',
+      default: 'Исследователь',
     },
     avatar: {
       type: String,
-      default: 'https://drikus.club/uploads/posts/2022-09/1663937794_46-drikus-club-p-kosmicheskii-korabl-yuriya-gagarina-krasiv-71.jpg',
+      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         validator: (v) => isURL(v),
         message: 'Некорректный URL',
