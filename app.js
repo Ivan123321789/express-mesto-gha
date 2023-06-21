@@ -9,7 +9,7 @@ const { login, createUser } = require('./src/controllers/users');
 const auth = require('./src/middlewares/auth');
 const userRouter = require('./src/routes/users');
 const cardRouter = require('./src/routes/cards');
-const { NOT_FOUND } = require('./src/utils/responseStatus');
+const NotFound = require('./src/errors/NotFound');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 const app = express();
@@ -29,8 +29,8 @@ app.post('/signin', authValidation, login);
 app.post('/signup', regValidation, createUser);
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
-app.use('/', (req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
+app.use('/', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
 });
 
 app.use(errors());
