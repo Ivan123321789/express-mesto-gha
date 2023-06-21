@@ -40,7 +40,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode)
     .send({
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? 'Буря мглою небо кроет'
         : message,
     });
   next();
