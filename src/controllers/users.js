@@ -2,21 +2,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
-  OK, CREATED, BAD_REQUEST, NOT_FOUND, SERVER_ERROR,
+  OK, CREATED, BAD_REQUEST, NOT_FOUND, CONFLICT, SERVER_ERROR,
 } = require('../utils/responseStatus');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(OK).send(users))
-    .catch((err) => {
-      res.status(SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
-    });
+    .catch(next); 
 };
 
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email } = req.body;
-
- bcrypt.hash(req.body.password, 10)
+  bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       name,
       about,
@@ -28,12 +25,14 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
+      } if (err.code === 11000) {
+        res.status(CONFLICT).send({ message: `Пользователь с таким email уже зарегистрирован` });
       } else {
-        res.status(SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        next(err);
       }
     });
 };
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -46,11 +45,11 @@ module.exports.getUserById = (req, res) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
       } else {
-        res.status(SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        next(err);
       }
     });
 };
-module.exports.patchUser = (req, res) => {
+module.exports.patchUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, {
     new: true,
@@ -58,7 +57,7 @@ module.exports.patchUser = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        resstatus(NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       }
       res.status(OK).send({ user });
@@ -67,11 +66,11 @@ module.exports.patchUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
       } else {
-        res.status(SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        next(err);
       }
     });
 };
-module.exports.patchAvatar = (req, res) => {
+module.exports.patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, {
     new: true,
@@ -88,7 +87,7 @@ module.exports.patchAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
       } else {
-        res.status(SERVER_ERROR).send({ message: `Ошибка сервера: ${err.message}` });
+        next(err);
       }
     });
 };
