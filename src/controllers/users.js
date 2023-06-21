@@ -1,8 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const BadRequest = require('../errors/BadRequest');
+const Conflict = require('../errors/Conflict');
+const NotFound = require('../errors/NotFound');
 const {
-  OK, CREATED, BAD_REQUEST, NOT_FOUND, CONFLICT,
+  OK, CREATED,
 } = require('../utils/responseStatus');
 
 module.exports.getUsers = (req, res, next) => {
@@ -32,9 +35,9 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
+        next(new BadRequest(`Ошибка валидации: ${err.message}`));
       } if (err.code === 11000) {
-        res.status(CONFLICT).send({ message: 'Пользователь с таким email уже зарегистрирован' });
+        next(new Conflict('Пользователь с таким email уже зарегистрирован'));
       } else {
         next(err);
       }
@@ -44,14 +47,13 @@ module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-        return;
+        throw new NotFound('Пользователь не найден');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
+        next(new BadRequest(`Ошибка валидации: ${err.message}`));
       } else {
         next(err);
       }
@@ -65,14 +67,13 @@ module.exports.patchUser = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-        return;
+        throw new NotFound('Пользователь не найден');
       }
       res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
+        next(new BadRequest(`Ошибка валидации: ${err.message}`));
       } else {
         next(err);
       }
@@ -86,14 +87,13 @@ module.exports.patchAvatar = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-        return;
+        throw new NotFound('Пользователь не найден');
       }
       res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: `Ошибка валидации: ${err.message}` });
+        throw new BadRequest(`Ошибка валидации: ${err.message}`);
       } else {
         next(err);
       }
@@ -114,8 +114,7 @@ module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-        return;
+        throw new NotFound('Пользователь не найден');
       }
       res.status(OK).send({ user });
     })
