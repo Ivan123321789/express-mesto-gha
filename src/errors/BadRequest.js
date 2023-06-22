@@ -3,7 +3,7 @@ const { BAD_REQUEST } = require('../utils/responseStatus');
 class BadRequest extends Error {
   constructor(message) {
     super(message);
-    this.type = BAD_REQUEST;
+    this.statusCode = BAD_REQUEST;
   }
 }
 
