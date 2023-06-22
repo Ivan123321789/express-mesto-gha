@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { errors } = require('celebrate');
 const mongoose = require('mongoose');
-const helmet = require('helmet');
+//const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { authValidation, regValidation } = require('./src/middlewares/validation');
 const { login, createUser } = require('./src/controllers/users');
@@ -13,7 +13,7 @@ const NotFound = require('./src/errors/NotFound');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 const app = express();
-app.use(helmet());
+//app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
