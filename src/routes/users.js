@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { userValidation, userIdValidation, avatarValidation } = require('../middlewares/validation');
 
 const {
-  getUsers, getUserById, createUser, patchUser, patchAvatar,
+  getUsers, getUserInfo, getUserById, createUser, patchUser, patchAvatar,
 } = require('../controllers/users');
 
 router.get('/users', getUsers);
