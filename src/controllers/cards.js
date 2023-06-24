@@ -37,11 +37,11 @@ module.exports.deleteCard = (req, res, next) => {
         throw new Forbidden('Удаление чужой карточки невозможно');
       }
       Card.findByIdAndRemove(req.params.cardId)
-        .then(() => res.send({ message: 'Карточка успешно удалена'})).catch(next);
+        .then(() => res.send({ message: 'Карточка успешно удалена' })).catch(next);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequest('Некорректнный id карточки'))
+        return next(new BadRequest('Некорректнный id карточки'));
       }
       return next(err);
     });
